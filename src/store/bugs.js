@@ -55,7 +55,7 @@ const {
   bugRemoved,
   bugAssigned,
 } = slice.actions;
-// export default slice.reducer;
+export default slice.reducer;
 
 //selector
 export const getUnresolvedBugs = createSelector(
@@ -76,7 +76,7 @@ export const loadBugs = () => (dispatch, getState) => {
   const diffInMinutes = moment().diff(moment(lastFetch), "minutes");
   if (diffInMinutes < 10) return;
 
-  dispatch(
+  return dispatch(
     actions.apiCallBegan({
       url: "/bugs",
       method: "get",
@@ -95,18 +95,18 @@ export const addBug = bug =>
     onSuccess: bugAdded.type,
   });
 
-export const assignBug = (bug, userId) =>
+export const assignBug = (bugId, userId) =>
   actions.apiCallBegan({
-    url: `/bugs/${bug.id}`,
+    url: `/bugs/${bugId}`,
     method: "patch",
     data: { userId },
     onSuccess: bugAssigned.type,
   });
 
-export const resolveBug = bug =>
+export const resolveBug = bugId =>
   actions.apiCallBegan({
-    url: `/bugs/${bug.id}`,
+    url: `/bugs/${bugId}`,
     method: "patch",
-    data: { resolved: bug.resolved },
+    data: { resolved: true },
     onSuccess: bugResolved.type,
   });
